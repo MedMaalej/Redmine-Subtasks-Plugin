@@ -162,7 +162,7 @@ module SubtaskListColumnsLib
 
       private 
       def get_fields_for_project(project_id, available_custom_fields)
-        all_fields = SubtaskListColumns.all.select {|c| c.prj_id == project_id}.sort_by{|o| o.order}
+        all_fields = SubtaskListColumns.all.select {|c| c.projectId == projectId}.sort_by{|o| o.order}
         remove_unavailable_custom_fields(all_fields, available_custom_fields)
       end
       

@@ -1,3 +1,3 @@
-class SubtaskListColumns < ActiveRecord::Base
+class SubtasksConfigList < ActiveRecord::Base
   unloadable
 end

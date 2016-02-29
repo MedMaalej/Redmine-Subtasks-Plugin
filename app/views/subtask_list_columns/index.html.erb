@@ -29,7 +29,6 @@
 </td>
 <td>
 <select id="selected_fields_list" size="25" style="width:120px">
-    <option id="selectedColumnsData"> </option>
 </select>
 </td>
 </tr>
@@ -40,7 +39,8 @@
    </td>
 </tr>
 </table>
-<input id="saveAll" type="hidden" name="save" value="0" />
+
+<input id="selectedColumns" name="selectedColumns" type="hidden"  value="0" />
 </form>
 <script type="text/javascript">
 
@@ -69,11 +69,17 @@
        for(var i = 0; i < selectedCols.length; i++)
        {
            if(i != selectedCols.length -1)
+           {
                config  = config + selectedCols[i].text+"|";
+           }
            else
+           {
                config  = config + selectedCols[i].text;
+           }
        }
-       var selectedColumnsJSON = <%= @selectedColumns.to_json.html_safe %>;
+       document.getElementById('selectedColumns').value = config
+       document.forms["subtask_list_columns"].submit();
+       
     }
 
 
