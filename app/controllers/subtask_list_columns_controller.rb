@@ -26,8 +26,8 @@ class SubtaskListColumnsController < ApplicationController
         config  = params['selectedColumns'].blank? ? '' : params['selectedColumns']      
      # if(json != '')
       #  updateSelectedColumns = JSON.parse(json)     
-       SubtasksConfigList.delete_all
-       c = SubtasksConfigList.new
+       #SubtasksConfigList.delete_all
+       c  = SubtasksConfigList.find_by(id: 1)  
        c.projectId = 0
        c.userId = 0
        c.userConfig = config
