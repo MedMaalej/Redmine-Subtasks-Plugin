@@ -1,5 +1,5 @@
-
-<form id="subtask_list_columns">
+<body onload="loadColsFromDB()">
+<form id="subtask_list_columns" action="subtask_list_columns">
 <table>
 <tr>
    <td> 
@@ -15,12 +15,12 @@
    </td>
 <tr>
     <td>
-      <select id="available_fields_list" size="25">
+      <select id="available_fields_list" size="25"  style="width:120px">
             <% @allColumns.each do |col| %>
               <option value="" >
-                <%= col['name'] %>
+                 <%= col['name'] %>
               </option>
-            <% end %>
+              <% end %> 
           </select>
 </td>
 <td>
@@ -29,6 +29,12 @@
 </td>
 <td>
 <select id="selected_fields_list" size="25" style="width:120px">
+     <% @configCols.each do |col| %>
+              <option value="" >
+                <%= col %>
+              </option>
+            <% end %>
+
 </select>
 </td>
 </tr>
@@ -39,7 +45,6 @@
    </td>
 </tr>
 </table>
-
 <input id="selectedColumns" name="selectedColumns" type="hidden"  value="0" />
 </form>
 <script type="text/javascript">
@@ -66,6 +71,7 @@
     {
        var selectedCols = document.getElementById('selected_fields_list').getElementsByTagName('option');
        var config = "";
+       var updatedAv ="";
        for(var i = 0; i < selectedCols.length; i++)
        {
            if(i != selectedCols.length -1)
@@ -77,10 +83,32 @@
                config  = config + selectedCols[i].text;
            }
        }
-       document.getElementById('selectedColumns').value = config
+        
+       document.getElementById('selectedColumns').value = config;
        document.forms["subtask_list_columns"].submit();
-       
+       //loadColsFromDB();
+       //alert("Configuration saved successfully ");     
+       //window.location.href="http://192.168.1.126:3000/subtask_list_columns"
     }
-
-
+    
+    function loadColsFromDB()
+    {
+        
+        var firstSelect = document.getElementById("available_fields_list");
+        var secondSelect = document.getElementById("selected_fields_list");
+        var firstContent = firstSelect.getElementsByTagName("option");
+        var secondContent = secondSelect.getElementsByTagName("option");
+        for(var i = 0 ; i < firstContent.length ; i++)
+        {
+           for(var j= 0 ; j < secondContent.length ; j++)
+           {
+               if(firstContent[i].text == secondContent[j].text)
+               {
+                  firstSelect.remove(i);                  
+               }
+           } 
+        }
+        
+    } 
 </script>
+</body>

@@ -54,8 +54,8 @@ module SubtaskListColumnsLib
           fields_list.each do |field|
             if(field  == 'tracker' || field  == 'subject')
               next
-             end  
-       #   s << content_tag('th style="text-align:left"', l(:field_subject))        
+            end  
+           
           s << content_tag('th style="text-align:left"',field)               
        end
        # set data
@@ -65,66 +65,70 @@ module SubtaskListColumnsLib
               css << " idnt idnt-#{level}" if level > 0
               
               field_content = 
-               content_tag('td', check_box_tag("ids[]", child.id, false, :id => nil), :class => 'checkbox') 
+                content_tag('td', check_box_tag("ids[]", child.id, false, :id => nil), :class => 'checkbox') +
                 #get_first_column_in_table(child, !fields_list.detect{|f| f['ident'] == 'tracker'}.nil?, !fields_list.detect{|f| f['ident'] == 'subject'}.nil?)
-             # field_content << content_tag('td', link_to_issue(child, :truncate => 160), :class => 'subject')
+           
               fields_list.each do |field|
                  if(field  == 'tracker' || field  == 'subject')
                   next
-                 end              
-               # field_content << content_tag('td', link_to_issue(child, :truncate => 160), :class => 'subject') 
+                end               
+                
                 
                 
                 # first looking for the default
                  
                   case field
                   when 'Project'
-                    field_content  <<  get_td(link_to_project(child.project))
-                  when 'Subject'
-                    field_content  <<  get_td(link_to_issue(child, :truncate => 160))
-                  when 'Description'
+                    field_content << get_td(link_to_project(child.project))
+                  when 'description'
                     field_content << get_td(child.description.truncate(100)) 
-                  when 'Due date'
+                  when 'due_date'
                     field_content << get_td(format_date(child.due_date))
-                  when 'Category'
+                  when 'category'
                     field_content << get_td(child.category)
                   when 'Status'
                     field_content << get_td(h(child.status))                    
-                  when 'Assignee'
+                  when 'assigned_to'
                     field_content << get_td(link_to_user(child.assigned_to))
-                  when 'Priority'
+                  when 'priority'
                     field_content << get_td(child.priority)
-                  when 'Author'
+                  when 'fixed_version'
+                    field_content << get_td(link_to_version(child.fixed_version))    
+                  when 'author'
                     field_content << get_td(link_to_user(child.author)) 
-                  when 'Created'
+                  when 'created_on'
                     field_content << get_td(format_time(child.created_on))
-                  when 'Updated'
+                  when 'updated_on'
                     field_content << get_td(format_time(child.updated_on))
-                  when 'Start date'
+                  when 'start_date'
                     field_content << get_td(format_date(child.start_date))
-                  when '% Done'
+                  when 'done_ratio'
                     field_content << get_td(progress_bar(child.done_ratio, :width => '70px'))
-                  when 'Estimated time'
+                  when 'estimated_hours'
                     field_content << get_td(child.estimated_hours)  
-                  when 'Parent task'
+                  when 'parent'
                     field_content << get_td(link_to_issue(child.parent, :tracker=> false, :subject => false))  
-                  when 'Due date'
+                  when 'closed_on'
                     field_content << get_td(format_time(child.closed_on))
-                  when 'Private'
-                    field_content << get_td(child.is_private ? l(:general_text_yes) : l(:general_text_no))
+                  when 'is_private'
+                    field_content << get_td(child.is_private ? l(:general_text_yes) : l(:general_text_no))                  
+                  when 'remaining_time'
+                    field_content << get_td(child.remaining_time)
                   else
-                    field_content << get_td("Undefined")                    
+                    puts "OK"                    
                   end
                     
-                 
+               
                 
- #         puts field_content      
-  
+                
+            field_values << content_tag('tr', field_content, :class => css).html_safe
           end
-          field_values << content_tag('tr', field_content, :class => css).html_safe   
-          end
+           issue_list(issue.descendants.visible.sort_by(&:lft)) do |child, level|
+
+              css = "issue issue-#{child.id} hascontextmenu"
+              css << " idnt idnt-#{level}" if level > 0
+
         end   
-        s << field_values
         s << '</table></form>'
         s.html_safe
       
