@@ -1,5 +1,5 @@
 <body onload="loadColsFromDB()">
-<form id="subtask_list_columns" action="subtask_list_columns">
+<form id="subtask_list_columns" action="subtask_list_columns" onsubmit="loadColsFromDB()">
 <table>
 <tr>
    <td> 
@@ -98,6 +98,10 @@
         var secondSelect = document.getElementById("selected_fields_list");
         var firstContent = firstSelect.getElementsByTagName("option");
         var secondContent = secondSelect.getElementsByTagName("option");
+        var option = document.createElement("option");
+        option.text = "Spent time";
+        firstSelect.add(option);
+   
         for(var i = 0 ; i < firstContent.length ; i++)
         {
            for(var j= 0 ; j < secondContent.length ; j++)

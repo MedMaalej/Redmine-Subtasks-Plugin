@@ -78,6 +78,10 @@ module SubtaskListColumnsLib
                 # first looking for the default
                  
                   case field
+                  when 'Tracker'
+                    field_content  <<  get_td(child.tracker)
+                   when 'Target version'
+                    field_content  <<  get_td(child.lock_version)
                   when 'Project'
                     field_content  <<  get_td(link_to_project(child.project))
                   when 'Subject'
@@ -105,7 +109,9 @@ module SubtaskListColumnsLib
                   when '% Done'
                     field_content << get_td(progress_bar(child.done_ratio, :width => '70px'))
                   when 'Estimated time'
-                    field_content << get_td(child.estimated_hours)  
+                    field_content << get_td(child.total_estimated_hours())  
+                   when 'Spent time'
+                    field_content << get_td(child.total_spent_hours()) 
                   when 'Parent task'
                     field_content << get_td(link_to_issue(child.parent, :tracker=> false, :subject => false))  
                   when 'Due date'
@@ -129,6 +135,8 @@ module SubtaskListColumnsLib
         s.html_safe
       
       end
+     
+
       private 
       def get_td(value)
         content_tag('td style="text-align:left"', value)

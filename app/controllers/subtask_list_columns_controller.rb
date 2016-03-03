@@ -12,9 +12,9 @@ class SubtaskListColumnsController < ApplicationController
     customFields ||= ActiveRecord::Base.connection.select_all(sql)
     
     
-
+    
     # @selectedColumns = .all 
-    @allColumns = Constants::DEFAULT_FIELDS + customFields
+    @allColumns = Constants::DEFAULT_FIELDS + customFields 
     sql = "SELECT userConfig from subtasks_config_list"
     allConfigs ||= SubtasksConfigList.where(userId: 0).where(projectId: 0).pluck("userConfig")
     @configCols = allConfigs.join("").split("|")
