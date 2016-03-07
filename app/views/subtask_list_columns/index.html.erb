@@ -1,7 +1,13 @@
 <body onload="loadColsFromDB()">
-<form id="subtask_list_columns" action="subtask_list_columns" onsubmit="loadColsFromDB()">
+<form id="subtask_list_columns" action="subtask_list_columns">
 <table>
 <tr>
+   <td>
+     <fieldset>
+        <legend>Project</legend>
+     </fieldset>
+   </td>
+   <td></td>
    <td> 
      <fieldset>
         <legend>Available columns</legend>
@@ -13,14 +19,29 @@
         <legend>Selected columns</legend>
      </fieldset>
    </td>
+
 <tr>
+    <td>
+<select id="selected_project_list" size="25" style="width:160px">
+     <% @projects.each do |col| %>
+              <option value="" >
+                <%= col %>
+              </option>
+            <% end %>
+
+</select>
+</td>
+<td>
+
+</td>
     <td>
       <select id="available_fields_list" size="25"  style="width:120px">
             <% @allColumns.each do |col| %>
               <option value="" >
                  <%= col['name'] %>
               </option>
-              <% end %> 
+              <% end %>
+             <option> Spent time </option> 
           </select>
 </td>
 <td>
@@ -29,11 +50,6 @@
 </td>
 <td>
 <select id="selected_fields_list" size="25" style="width:120px">
-     <% @configCols.each do |col| %>
-              <option value="" >
-                <%= col %>
-              </option>
-            <% end %>
 
 </select>
 </td>
@@ -46,6 +62,8 @@
 </tr>
 </table>
 <input id="selectedColumns" name="selectedColumns" type="hidden"  value="0" />
+<input id="selectedProj" name="selectedProj" type="hidden"  value="0" />
+<input id="projSelChange" name="projSelChange" type="hidden"  value=0 />
 </form>
 <script type="text/javascript">
 
@@ -71,7 +89,7 @@
     {
        var selectedCols = document.getElementById('selected_fields_list').getElementsByTagName('option');
        var config = "";
-       var updatedAv ="";
+       
        for(var i = 0; i < selectedCols.length; i++)
        {
            if(i != selectedCols.length -1)
@@ -85,22 +103,29 @@
        }
         
        document.getElementById('selectedColumns').value = config;
+       var selectedProj = document.getElementById('selected_project_list').getElementsByTagName('option'); 
+        
+
+       
+       document.getElementById('selectedProj').value = selectedProj [document.getElementById('selected_project_list').selectedIndex].text
        document.forms["subtask_list_columns"].submit();
        //loadColsFromDB();
        //alert("Configuration saved successfully ");     
        //window.location.href="http://192.168.1.126:3000/subtask_list_columns"
-    }
-    
+    }  
     function loadColsFromDB()
     {
         
         var firstSelect = document.getElementById("available_fields_list");
         var secondSelect = document.getElementById("selected_fields_list");
+        var thirdSelect = document.getElementById("selected_project_list"); 
         var firstContent = firstSelect.getElementsByTagName("option");
         var secondContent = secondSelect.getElementsByTagName("option");
-        var option = document.createElement("option");
-        option.text = "Spent time";
-        firstSelect.add(option);
+        <% if @currentUser == 1 %>    
+           var optionDef = document.createElement("option");
+           optionDef.text = "Global configuration";
+           thirdSelect.add(optionDef);
+        <%end%> 
    
         for(var i = 0 ; i < firstContent.length ; i++)
         {

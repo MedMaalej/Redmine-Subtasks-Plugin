@@ -16,15 +16,25 @@ module SubtaskListColumnsLib
 
       def render_descendants_tree_with_listed(issue)
        
-        record = SubtasksConfigList.where(userId: 0).where(projectId: 0).pluck(:userConfig)
-        toStr = record.join("")
-        fields_list = toStr.split("|")        
+        record = SubtasksConfigList.where(userId: User.current.id).where(projectId: @project).pluck(:userConfig)
+        if (record.join != "")
+           toStr = record.join("")
+           fields_list = toStr.split("|")
+          # puts "FIELDS_LIST= #{fields_list}  "
+          # puts "NOT NIL !!!!"
+        else 
+           record  = SubtasksConfigList.where(userId: 0).where(projectId: 0)
+           toStr = record.pluck(:userConfig).join("")
+          # puts "default:#{toStr}"
+           fields_list = toStr.split("|")
+          # puts "NIL !!!!!!!!!!!"
+        end  
         field_values = ''
         field_headers = ''
 
         s = '<form><table class="list issues">'
         
-        if(fields_list.count == 0) 
+        if fields_list.count   == 0
           #if the project column is not set, show: subject, status, assigned_to and done_ratio
          
           s << content_tag('tr',
@@ -46,8 +56,8 @@ module SubtaskListColumnsLib
 
             field_content << content_tag('td', progress_bar(child.done_ratio, :width => '80px'))
             field_values << content_tag('tr', field_content, :class => css).html_safe
-          end
-       else 
+       end    
+       else
          # show columns from table
           
           # set header - columns names
@@ -57,7 +67,7 @@ module SubtaskListColumnsLib
              end  
        #   s << content_tag('th style="text-align:left"', l(:field_subject))        
           s << content_tag('th style="text-align:left"',field)               
-       end
+          end
        # set data
           issue_list(issue.descendants.visible.sort_by(&:lft)) do |child, level|
 
