@@ -5,3 +5,5 @@ en:
   available_columns: "Available columns"
   
   selected_columns: "Selected columns"
+  
+  button_restore: "Restore default configuration"

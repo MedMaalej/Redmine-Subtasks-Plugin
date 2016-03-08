@@ -23,6 +23,12 @@ class SubtaskListColumnsController < ApplicationController
    # @allColumns ||= ActiveRecord::Base.connection.select_all(sql) 
     
     save = params['save'].blank? ? '' : params['save']
+       
+    if (params['restoreRequest'].eql? '1')
+       proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
+       #puts "OK"
+       SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
+    end
     #show_selected_project_config(proj)    
     if (save.eql? '1')
        config  = params['selectedColumns'].blank? ? '' : params['selectedColumns'] 
