@@ -97,6 +97,7 @@ end %>
 <div class="contextual">
   <%= link_to_new_subtask(@issue) if User.current.allowed_to?(:manage_subtasks, @project) %> 
   | <a href="../subtask_list_columns"> Configure subtasks columns </a>
+  | <a id="restoreLink" href="../subtask_list_columns?restore=0&selectedColumns=0&selectedProj=<%= @project %>&projSelChange=0&restoreRequest=1" onclick="onRestore()"> Restore default configuration </a>
 </div>
 <p><strong><%=l(:label_subtask_plural)%></strong></p>
 <%= render_descendants_tree(@issue) unless @issue.leaf? %>
@@ -161,3 +162,11 @@ end %>
 <% end %>
 
 <%= context_menu issues_context_menu_path %>
+<script>
+
+   function onRestore() {
+      alert("Default configuration restored successfully!");
+   }
+
+
+</script>
