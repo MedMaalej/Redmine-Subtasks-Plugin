@@ -23,12 +23,18 @@ module SubtaskListColumnsLib
           # puts "FIELDS_LIST= #{fields_list}  "
           # puts "NOT NIL !!!!"
         else 
+           record  = SubtasksConfigList.where(userId: 1).where(projectId: @project).pluck("userConfig")
+           if record.join != ""
+               toStr = record.join("")
+               fields_list = toStr.split("|")
+           else
            record  = SubtasksConfigList.where(userId: 0).where(projectId: 0)
            toStr = record.pluck(:userConfig).join("")
           # puts "default:#{toStr}"
            fields_list = toStr.split("|")
           # puts "NIL !!!!!!!!!!!"
         end  
+        end 
         field_values = ''
         field_headers = ''
 

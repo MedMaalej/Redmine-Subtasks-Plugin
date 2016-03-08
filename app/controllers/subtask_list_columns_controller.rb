@@ -2,7 +2,7 @@ require_dependency 'constants.rb'
 
 class SubtaskListColumnsController < ApplicationController
   unloadable
-  before_filter :require_admin
+ # before_filter :require_admin
   helper_method :show_selected_project_config
   def index   
     
