@@ -57,7 +57,7 @@
 <tr>
    <td>
          <button name="save" value=1 onclick="saveAll()"><%= l(:button_save) %></button>
-         <% if @currentUser != 1 %>
+         <% if @currentUser != 1 && @canRestore == true %>
          <button name="restore" value=0 onclick="restoreDefaultConfig()"><%= l(:button_restore) %></button> 
          <% end %>
    </td>

@@ -4,11 +4,19 @@ class SubtaskListColumnsController < ApplicationController
   unloadable
  # before_filter :require_admin
   helper_method :show_selected_project_config
+  def restoreDefaults()
+    if (params['restoreRequest'].eql? '1')
+       proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
+       #puts "OK"
+       @canRestore = User.current.allowed_to?(:restore_config, Project.find_by(name: proj))
+       SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
+    end
+  end 
   def index   
-    
     
     @projects ||= Project.pluck("name")
     @currentUser = User.current.id    
+    puts (@canRestore)
     sql = "SELECT  name FROM custom_fields WHERE type = 'IssueCustomField'"
     customFields ||= ActiveRecord::Base.connection.select_all(sql)
     # @selectedColumns = .all 
@@ -21,14 +29,10 @@ class SubtaskListColumnsController < ApplicationController
 
    # sql = "SELECT userConfig  FROM subtasks_config_list where projectId=1" 
    # @allColumns ||= ActiveRecord::Base.connection.select_all(sql) 
+    restoreDefaults()
     
     save = params['save'].blank? ? '' : params['save']
        
-    if (params['restoreRequest'].eql? '1')
-       proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
-       #puts "OK"
-       SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
-    end
     #show_selected_project_config(proj)    
     if (save.eql? '1')
        config  = params['selectedColumns'].blank? ? '' : params['selectedColumns'] 
