@@ -9,3 +9,7 @@ en:
   button_restore: "Restore defaults"
 
   subtasks_tab: "Subtasks configuration"
+
+  button_tab: "Activate Tab"
+
+  button_disable_tab: "Disable Tab"

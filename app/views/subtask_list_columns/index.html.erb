@@ -59,13 +59,20 @@
          <% if @currentUser != 1 && @canRestore == true %>
          <button name="restore" value=0 onclick="restoreDefaultConfig()"><%= l(:button_restore) %></button> 
          <% end %>
-         Enable in tab  <input type="checkbox" name="enablePluginTab" id="enablePluginTab" value=0>
+         <button name="enableTab" id="enableTab"  onclick="activateTab()"> 
+           <% if @tabIsEnabled == false %>         
+               <%= l(:button_tab) %> 
+          <%  else %>
+               <%= l(:button_disable_tab) %>
+          <% end %> 
+         </button>
    </td>
 </tr>
 </table>
 <input id="selectedColumns" name="selectedColumns" type="hidden"  value="0" />
 <input id="selectedProj" name="selectedProj" type="hidden"  value="0" />
 <input id="projSelChange" name="projSelChange" type="hidden"  value=0 />
+<input id="enablePluginTab" name="enablePluginTab" type="hidden"  value=0 />
 <input id="restoreRequest" name="restoreRequest" type="hidden" value=0 />
 </form>
 <script type="text/javascript">
@@ -132,12 +139,7 @@
         var secondSelect = document.getElementById("selected_fields_list");
         var thirdSelect = document.getElementById("selected_project_list"); 
         var firstContent = firstSelect.getElementsByTagName("option");
-        var secondContent = secondSelect.getElementsByTagName("option");
-        <% if @tabIsEnabled == true %>
-             document.getElementById('enablePluginTab').checked = true;
-        <%else%>
-             document.getElementById('enablePluginTab').checked = false; 
-        <%end%>  
+        var secondContent = secondSelect.getElementsByTagName("option");  
         <% if @currentUser == 1 %>    
            var optionDef = document.createElement("option");
            optionDef.text = "Global configuration";
@@ -164,6 +166,16 @@
        document.forms["subtask_list_columns"].submit();             
        alert("Default configuration was restored!");
     }
-    
+    function activateTab()
+    {
+       <% if @tabIsEnabled == false %>
+          document.getElementById("enablePluginTab").value =1;
+          document.forms["subtask_list_columns"].submit();   
+       <%else%>
+          document.getElementById("enablePluginTab").value = 0;
+          document.forms["subtask_list_columns"].submit();  
+       <%end%>
+    }
+        
 </script>
 </body>

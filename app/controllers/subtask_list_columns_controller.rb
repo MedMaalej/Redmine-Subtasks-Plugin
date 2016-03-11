@@ -10,23 +10,23 @@ class SubtaskListColumnsController < ApplicationController
   def enablePluginTab
     
      if params['enablePluginTab'].eql? '1'
-        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
-         c = ProjectSettingsTab.find_by(userId: User.current.id, projectId: Project.find_by(name: proj))
+          c = ProjectSettingsTab.find_by(userId: User.current.id)
           if c == nil
              c = ProjectSettingsTab.new
           end
-          temp  =  Project.find_by(name: proj)
           #projId = temp['id']
-          c.projectId = temp['id']
+          c.projectId = 0
           c.userId = User.current.id
           c.subtasksTabIsEnabled = 1
           c.save
-          c = ProjectSettingsTab.find_by(userId: User.current.id, projectId: Project.find_by(name: proj)) 
-          if c!= nil
-              @tabIsEnabled = true  
-          end   
-     end 
-  end   
+          @tabIsEnabled = true     
+     else
+          c = ProjectSettingsTab.find_by(userId: User.current.id)
+          ProjectSettingsTab.where(userId: User.current.id).destroy_all              
+          @tabIsEnabled = false
+     end
+  end
+  
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
@@ -55,10 +55,9 @@ class SubtaskListColumnsController < ApplicationController
     restoreDefaults()
     
     save = params['save'].blank? ? '' : params['save']
-       
+    enablePluginTab()
     #show_selected_project_config(proj)    
     if (save.eql? '1')
-       enablePluginTab()
        config  = params['selectedColumns'].blank? ? '' : params['selectedColumns'] 
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
      # if(json != '')
