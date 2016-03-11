@@ -2,31 +2,8 @@ require_dependency 'constants.rb'
 
 class SubtaskListColumnsController < ApplicationController
   unloadable
-  helper_method :index
-  
   # before_filter :index 
  # before_filter :require_admin 
-
-  def enablePluginTab
-    
-     if params['enablePluginTab'].eql? '1'
-        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
-         c = ProjectSettingsTab.find_by(userId: User.current.id, projectId: Project.find_by(name: proj))
-          if c == nil
-             c = ProjectSettingsTab.new
-          end
-          temp  =  Project.find_by(name: proj)
-          #projId = temp['id']
-          c.projectId = temp['id']
-          c.userId = User.current.id
-          c.subtasksTabIsEnabled = 1
-          c.save
-          c = ProjectSettingsTab.find_by(userId: User.current.id, projectId: Project.find_by(name: proj)) 
-          if c!= nil
-              @tabIsEnabled = true  
-          end   
-     end 
-  end   
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
@@ -35,8 +12,9 @@ class SubtaskListColumnsController < ApplicationController
        SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
     end
   end
+  helper_method :restoreDefaults 
   def index   
-        
+    
     @projects ||= Project.pluck("name")
     @currentUser = User.current.id    
     puts (@canRestore)
@@ -58,7 +36,6 @@ class SubtaskListColumnsController < ApplicationController
        
     #show_selected_project_config(proj)    
     if (save.eql? '1')
-       enablePluginTab()
        config  = params['selectedColumns'].blank? ? '' : params['selectedColumns'] 
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
      # if(json != '')
@@ -89,4 +66,5 @@ class SubtaskListColumnsController < ApplicationController
       end
     end                                      
   end 
+helper_method :index
 end

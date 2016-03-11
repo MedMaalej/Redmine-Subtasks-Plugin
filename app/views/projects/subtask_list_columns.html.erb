@@ -7,6 +7,7 @@
         <legend>Project</legend>
      </fieldset>
    </td>
+   <td></td>
    <td> 
      <fieldset>
         <legend>Available columns</legend>
@@ -18,19 +19,20 @@
         <legend>Selected columns</legend>
      </fieldset>
    </td>
+
 <tr>
     <td>
-<select id="selected_project_list" size="25" style="width:160px" required>
+<select id="selected_project_list" size="25" style="width:160px">
      <% @projects.each do |col| %>
-            
-              <option value="">
+              <option value="" >
                 <%= col %>
               </option>
-              
-              
             <% end %>
 
 </select>
+</td>
+<td>
+
 </td>
     <td>
       <select id="available_fields_list" size="25"  style="width:120px">
@@ -51,7 +53,6 @@
 
 </select>
 </td>
-
 </tr>
 <tr>
    <td>
@@ -59,7 +60,6 @@
          <% if @currentUser != 1 && @canRestore == true %>
          <button name="restore" value=0 onclick="restoreDefaultConfig()"><%= l(:button_restore) %></button> 
          <% end %>
-         Enable in tab  <input type="checkbox" name="enablePluginTab" id="enablePluginTab" value=0>
    </td>
 </tr>
 </table>
@@ -111,14 +111,6 @@
 
        
        document.getElementById('selectedProj').value = selectedProj [document.getElementById('selected_project_list').selectedIndex].text;
-       if(document.getElementById('enablePluginTab').checked == true)
-       { 
-          document.getElementById('enablePluginTab').value = 1;  
-       }
-       else
-       {
-          document.getElementById('enablePluginTab').value = 0; 
-       }
        document.forms["subtask_list_columns"].submit();
        alert("Configuration saved successfully");
        //loadColsFromDB();
@@ -133,11 +125,6 @@
         var thirdSelect = document.getElementById("selected_project_list"); 
         var firstContent = firstSelect.getElementsByTagName("option");
         var secondContent = secondSelect.getElementsByTagName("option");
-        <% if @tabIsEnabled == true %>
-             document.getElementById('enablePluginTab').checked = true;
-        <%else%>
-             document.getElementById('enablePluginTab').checked = false; 
-        <%end%>  
         <% if @currentUser == 1 %>    
            var optionDef = document.createElement("option");
            optionDef.text = "Global configuration";
@@ -164,6 +151,5 @@
        document.forms["subtask_list_columns"].submit();             
        alert("Default configuration was restored!");
     }
-    
 </script>
 </body>

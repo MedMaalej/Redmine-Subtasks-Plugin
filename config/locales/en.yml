@@ -7,3 +7,5 @@ en:
   selected_columns: "Selected columns"
   
   button_restore: "Restore defaults"
+
+  subtasks_tab: "Subtasks configuration"
