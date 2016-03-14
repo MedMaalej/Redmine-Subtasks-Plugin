@@ -7,25 +7,6 @@ class SubtaskListColumnsController < ApplicationController
   # before_filter :index 
  # before_filter :require_admin 
 
-  def enablePluginTab
-    
-     if params['enablePluginTab'].eql? '1'
-          c = ProjectSettingsTab.find_by(userId: User.current.id)
-          if c == nil
-             c = ProjectSettingsTab.new
-          end
-          #projId = temp['id']
-          c.projectId = 0
-          c.userId = User.current.id
-          c.subtasksTabIsEnabled = 1
-          c.save
-          @tabIsEnabled = true     
-     else
-          c = ProjectSettingsTab.find_by(userId: User.current.id)
-          ProjectSettingsTab.where(userId: User.current.id).destroy_all              
-          @tabIsEnabled = false
-     end
-  end
   
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
@@ -55,7 +36,6 @@ class SubtaskListColumnsController < ApplicationController
     restoreDefaults()
     
     save = params['save'].blank? ? '' : params['save']
-    enablePluginTab()
     #show_selected_project_config(proj)    
     if (save.eql? '1')
        config  = params['selectedColumns'].blank? ? '' : params['selectedColumns'] 

@@ -59,20 +59,12 @@
          <% if @currentUser != 1 && @canRestore == true %>
          <button name="restore" value=0 onclick="restoreDefaultConfig()"><%= l(:button_restore) %></button> 
          <% end %>
-         <button name="enableTab" id="enableTab"  onclick="activateTab()"> 
-           <% if @tabIsEnabled == false %>         
-               <%= l(:button_tab) %> 
-          <%  else %>
-               <%= l(:button_disable_tab) %>
-          <% end %> 
-         </button>
    </td>
 </tr>
 </table>
 <input id="selectedColumns" name="selectedColumns" type="hidden"  value="0" />
 <input id="selectedProj" name="selectedProj" type="hidden"  value="0" />
 <input id="projSelChange" name="projSelChange" type="hidden"  value=0 />
-<input id="enablePluginTab" name="enablePluginTab" type="hidden"  value=0 />
 <input id="restoreRequest" name="restoreRequest" type="hidden" value=0 />
 </form>
 <script type="text/javascript">
@@ -118,14 +110,6 @@
 
        
        document.getElementById('selectedProj').value = selectedProj [document.getElementById('selected_project_list').selectedIndex].text;
-       if(document.getElementById('enablePluginTab').checked == true)
-       { 
-          document.getElementById('enablePluginTab').value = 1;  
-       }
-       else
-       {
-          document.getElementById('enablePluginTab').value = 0; 
-       }
        document.forms["subtask_list_columns"].submit();
        alert("Configuration saved successfully");
        //loadColsFromDB();
@@ -166,7 +150,7 @@
        document.forms["subtask_list_columns"].submit();             
        alert("Default configuration was restored!");
     }
-    function activateTab()
+/*    function activateTab()
     {
        <% if @tabIsEnabled == false %>
           document.getElementById("enablePluginTab").value =1;
@@ -176,6 +160,6 @@
           document.forms["subtask_list_columns"].submit();  
        <%end%>
     }
-        
+*/      
 </script>
 </body>
