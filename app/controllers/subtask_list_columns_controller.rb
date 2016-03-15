@@ -16,7 +16,8 @@ class SubtaskListColumnsController < ApplicationController
     end
   end
     def enablePluginTab
-    
+     @canEnableDisable = User.current.allowed_to?( :enable_and_disable_plugin_tab , Project.find_by(id: 1))    
+     #puts "CAN DISABLE = #{@canEnableDisable}"
      if params['enablePluginTab'].eql? '1'
           c = ProjectSettingsTab.find_by(userId: User.current.id)
           if c == nil

@@ -16,6 +16,7 @@ Redmine::Plugin.register :subtask_list_columns do
   version '0.0.1'
   project_module :subtasks_list_columns do
      permission :create_or_save_configuration, :subtaskListColumns => :index
+     permission :enable_and_disable_plugin_tab, :subtaskListColumns => :enablePluginTab
      permission :restore_default_configuration, :subtaskListColumns => :restoreDefaults
      menu :admin_menu, :subtask_list_columns, {:controller => 'subtask_list_columns', :action => 'index'}, :caption => :subtask_list_columns
      permission :manage_project_workflow, {}, :require => :member

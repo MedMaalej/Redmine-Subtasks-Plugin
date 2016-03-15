@@ -59,13 +59,16 @@
          <% if @currentUser != 1 && @canRestore == true %>
          <button name="restore" value=0 onclick="restoreDefaultConfig()"><%= l(:button_restore) %></button> 
          <% end %>
-         <button name="enableTab" id="enableTab"  onclick="activateTab()"> 
-           <% if @tabIsEnabled == false %>         
+         <% if @canEnableDisable == true %>
+            <button name="enableTab" id="enableTab"  onclick="activateTab()"> 
+            <% if @tabIsEnabled == false %>         
                <%= l(:button_tab) %> 
-          <%  else %>
+            <%  else %>
                <%= l(:button_disable_tab) %>
-          <% end %> 
-         </button>
+            <% end %> 
+            </button>
+         
+         <%end%>
    </td>
 </tr>
 </table>
