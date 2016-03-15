@@ -1,3 +1,6 @@
+require 'active_record'
+require 'mysql2'
+
 module CCULProjectsHelperPatch
   def self.included(base)
   base.send(:include, ProjectsHelperMethodsCCUL)
@@ -10,14 +13,33 @@ module CCULProjectsHelperPatch
 end
 
 module ProjectsHelperMethodsCCUL
-  def project_settings_tabs_with_subtask_list_columns
-    @tabs = project_settings_tabs_without_subtask_list_columns
-    @action = {:name => 'subtasks_tab', :partial => 'tab/show', :label => :subtasks_tab}
-    Rails.logger.info "old_tabs: #{@tabs}"
-    Rails.logger.info "action: #{@action}"
-    @tabs << @action #if User.current.allowed_to?(action, @project)
-    @tabs
- end
-end
+  
+  def project_settings_tabs_with_subtask_list_columns  
+#Rails.configuration.to_prepare do
+      sql = "select *  from project_settings_tabs where userId ="+ User.current.id.to_s
+      result ||= ActiveRecord::Base.connection.select_all(sql)
+     
+      
+         result.each do |row|
+            @res = row["subtasksTabIsEnabled"]
+         end
+         puts @res
+         if @res == 1 
+           @tabs = project_settings_tabs_without_subtask_list_columns
+           @action = {:name => 'subtasks_tab', :partial => 'tab/show', :label => :subtasks_tab}
+           Rails.logger.info "old_tabs: #{@tabs}"
+           Rails.logger.info "action: #{@action}"
+           @tabs << @action #if User.current.allowed_to?(action, @project)
+           @tabs 
+        else
+           @tabs = project_settings_tabs_without_subtask_list_columns
+           Rails.logger.info "old_tabs: #{@tabs}"
+           @tabs
 
+        end
+       
+       
+    
+  end
+end
 ProjectsHelper.send(:include, CCULProjectsHelperPatch) unless ProjectsHelper.included_modules.include? CCULProjectsHelperPatch

@@ -6,18 +6,45 @@ class SubtaskListColumnsController < ApplicationController
   
   # before_filter :index 
  # before_filter :require_admin 
-
-  
+    
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
        #puts "OK"
-       @canRestore = User.current.allowed_to?(:restore_config, Project.find_by(name: proj))
+       @canRestore = User.current.allowed_to?(:restore_default_configuration, Project.find_by(name: proj))
        SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
     end
   end
+    def enablePluginTab
+    
+     if params['enablePluginTab'].eql? '1'
+          c = ProjectSettingsTab.find_by(userId: User.current.id)
+          if c == nil
+             c = ProjectSettingsTab.new
+          end
+          #projId = temp['id']
+          c.projectId = 0
+          c.userId = User.current.id
+          c.subtasksTabIsEnabled = 1
+          c.save
+          @tabIsEnabled = true
+     elsif params['enablePluginTab'].eql? '0'
+          
+          ProjectSettingsTab.where(userId: User.current.id).destroy_all              
+          @tabIsEnabled = false
+     else
+     end
+
+  end
   def index   
-        
+     c = ProjectSettingsTab.find_by(userId: User.current.id)
+     if c == nil
+         @tabIsEnabled = false
+     else
+         @tabIsEnabled = true
+     end
+
+    enablePluginTab()       
     @projects ||= Project.pluck("name")
     @currentUser = User.current.id    
     puts (@canRestore)
@@ -36,6 +63,9 @@ class SubtaskListColumnsController < ApplicationController
     restoreDefaults()
     
     save = params['save'].blank? ? '' : params['save']
+    
+  
+    
     #show_selected_project_config(proj)    
     if (save.eql? '1')
        config  = params['selectedColumns'].blank? ? '' : params['selectedColumns'] 
