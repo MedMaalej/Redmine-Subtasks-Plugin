@@ -52,6 +52,11 @@ class SubtaskListColumnsController < ApplicationController
        @canEnableDisable = User.current.allowed_to?(:enable_and_disable_plugin_tab,Project.find_by(name: proj))
        @projects ||= Project.where(name: proj).pluck("name")
        #puts @canEnableDisable
+       selectedProject = Project.find_by(name: proj)
+       puts selectedProject['id']
+       defConfigs ||= SubtasksConfigList.where(userId: User.current.id).where(projectId: selectedProject['id']).pluck("userConfig")
+       @defaultConfig = defConfigs.join("").split("|")
+
     else
        @inProj = false
        @projects ||= Project.pluck("name") 
@@ -71,8 +76,8 @@ class SubtaskListColumnsController < ApplicationController
     # @selectedColumns = .all 
     @allColumns = Constants::DEFAULT_FIELDS + customFields 
     sql = "SELECT userConfig from subtasks_config_list"
-    defConfigs ||= SubtasksConfigList.where(userId: 0).where(projectId: 0).pluck("userConfig")
-    @defaultConfig = defConfigs.join("").split("|")
+    defConfigs ||= SubtasksConfigList.where(userId: User.current.id).where(projectId: 0).pluck("userConfig")
+    @config = defConfigs.join("").split("|")
     #  configs ||= SubtasksConfigList.where(userId: User.current.id).where(projectId: 0).pluck("userConfig")
    # @allConfigs = configs.join("").split("|")
 

@@ -48,6 +48,13 @@
 </td>
 <td>
 <select id="selected_fields_list" size="25" style="width:120px">
+            <%if @inProj == true %> 
+              <% @config.each do |col| %>
+                <option value="" >
+                   <%= col %>
+                </option>
+              <% end %>
+            <%end%>  
 
 </select>
 </td>
