@@ -96,8 +96,10 @@ end %>
 <div id="issue_tree">
 <div class="contextual">
   <%= link_to_new_subtask(@issue) if User.current.allowed_to?(:manage_subtasks, @project) %> 
- <% if User.current.allowed_to?(:create_or_save_configuration, @project) %> | <a href="../subtask_list_columns"> Configure subtasks columns </a> <%end%>
- <% if User.current.allowed_to?(:restore_default_configuration, @project) && User.current.id != 1 %> | <a id="restoreLink" href="../subtask_list_columns?restore=0&selectedColumns=0&selectedProj=<%= @project %>&projSelChange=0&restoreRequest=1" onclick="onRestore()"> Restore default configuration </a> <%end%>
+ <% if User.current.allowed_to?(:create_or_save_configuration, @project) %> | <a href="../subtask_list_columns?inProject=1&selectedProj=<%= @project %>"> Configure subtasks columns </a> <%end%>
+ <% if User.current.allowed_to?(:restore_default_configuration, @project) && User.current.id != 1 %> 
+         |<a href="../subtask_list_columns?selectedProj=<%= @project %>&restoreRequest=1&fromLink=1&inProject=1" onclick="restoreDefaultConfig()"> Restore default configuration </a>
+ <%end%>
 </div>
 <p><strong><%=l(:label_subtask_plural)%></strong></p>
 <%= render_descendants_tree(@issue) unless @issue.leaf? %>
@@ -156,7 +158,10 @@ end %>
     </div>
   <% end %>
 <% end %>
-
+<form name="restoreForm" action="">
+    <input type="hidden" id="restoreRequest" name="restoreRequest">
+    <input type="hidden" id="selectedProj" name="selectedProj" value="<%= @project %>">
+</form>
 <% content_for :header_tags do %>
     <%= auto_discovery_link_tag(:atom, {:format => 'atom', :key => User.current.rss_key}, :title => "#{@issue.project} - #{@issue.tracker} ##{@issue.id}: #{@issue.subject}") %>
 <% end %>
@@ -164,9 +169,13 @@ end %>
 <%= context_menu issues_context_menu_path %>
 <script>
 
-   function onRestore() {
-      alert("Default configuration restored successfully!");
-   }
 
-
+    function restoreDefaultConfig()
+    {
+       document.getElementById("restoreRequest").value =1;
+       //alert(document.getElementById("restoreRequest").value);
+       //alert(document.getElementById("selectedProj").value);
+       document.forms["restoreForm"].submit();
+       alert("Default configuration was restored!");
+    }
 </script>

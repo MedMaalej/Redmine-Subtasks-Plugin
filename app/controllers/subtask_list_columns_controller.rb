@@ -3,20 +3,26 @@ require_dependency 'constants.rb'
 class SubtaskListColumnsController < ApplicationController
   unloadable
   helper_method :index
-  
+  helper_method :restoreDefaults
+  helper_method :enablePluginTab  
   # before_filter :index 
  # before_filter :require_admin 
-    
+  
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
-       #puts "OK"
-       @canRestore = User.current.allowed_to?(:restore_default_configuration, Project.find_by(name: proj))
+       puts "Project="+ proj
+       #puts "OK
        SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
+       if ((params['inProject'].eql? '0') || ( params['fromLink'].eql? '1'))
+          redirect_to :back
+       elsif (params['inProject'].eql? '1') 
+          redirect_to "../subtask_list_columns?inProject=1&selectedProj=<%= proj %>" 
+       end
     end
   end
     def enablePluginTab
-     @canEnableDisable = User.current.allowed_to?( :enable_and_disable_plugin_tab , Project.find_by(id: 1))    
+    
      #puts "CAN DISABLE = #{@canEnableDisable}"
      if params['enablePluginTab'].eql? '1'
           c = ProjectSettingsTab.find_by(userId: User.current.id)
@@ -38,6 +44,18 @@ class SubtaskListColumnsController < ApplicationController
 
   end
   def index   
+    if (params['inProject'].eql? '1')
+       @inProj = true     
+       proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
+       @canRestore = User.current.allowed_to?(:restore_default_configuration, Project.find_by(name: proj))
+       #puts @canRestore
+       @canEnableDisable = User.current.allowed_to?(:enable_and_disable_plugin_tab,Project.find_by(name: proj))
+       @projects ||= Project.where(name: proj).pluck("name")
+       #puts @canEnableDisable
+    else
+       @inProj = false
+       @projects ||= Project.pluck("name") 
+    end
      c = ProjectSettingsTab.find_by(userId: User.current.id)
      if c == nil
          @tabIsEnabled = false
@@ -46,9 +64,8 @@ class SubtaskListColumnsController < ApplicationController
      end
 
     enablePluginTab()       
-    @projects ||= Project.pluck("name")
+   
     @currentUser = User.current.id    
-    puts (@canRestore)
     sql = "SELECT  name FROM custom_fields WHERE type = 'IssueCustomField'"
     customFields ||= ActiveRecord::Base.connection.select_all(sql)
     # @selectedColumns = .all 
