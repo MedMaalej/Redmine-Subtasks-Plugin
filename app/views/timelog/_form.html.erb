@@ -36,21 +36,27 @@
      <th>
         Comments
      </th>
+     <th>
+        Activity
+     </th>
   <% 
      
      sql = "SELECT * from time_entries where user_id=#{User.current.id}"
      @allLogs ||=  ActiveRecord::Base.connection.select_all(sql)
+     sumOfHours = 0
      @allLogs.each do |log|  %>
      <% if log['spent_on'] == @time_entry.spent_on %>
         <tr>
            <td> <%= log['hours'] %> </td>
            <td> <%= Issue.find_by(id: log['issue_id']) %> </td>
            <td> <%= log['comments'] %> </td>  
+           <td> <%= Enumeration.find_by(id: log['activity_id']) %> </td> 
         </tr>
-       
+       <% sumOfHours = sumOfHours + log['hours'] %> 
      <%end%>  
   <%end%>
   </table>
+    <center>You logged<h1> <%= sumOfHours %> </h1>  hours of work on <%= @time_entry.spent_on %></center>
   <%= call_hook(:view_timelog_edit_form_bottom, { :time_entry => @time_entry, :form => f }) %>
 </div>
 
