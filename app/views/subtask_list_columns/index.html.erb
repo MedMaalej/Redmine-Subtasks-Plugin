@@ -85,6 +85,7 @@
 <input id="inProject" name="inProject" type="hidden"  value=0 />
 <input id="enablePluginTab" name="enablePluginTab" type="hidden" />
 <input id="restoreRequest" name="restoreRequest" type="hidden" value=0 />
+<input id="fromLink" name="fromLink" type="hidden" value=0 />
 </form>
 <script type="text/javascript">
     function selectItem()
@@ -173,6 +174,10 @@
     } 
     function restoreDefaultConfig()
     {
+          <% if  @inProj == true %>
+           document.getElementById('inProject').value = 1;
+          <%end%>
+        document.getElementById("fromLink").value = 0;   
        document.getElementById("restoreRequest").value =1;
        var selectedProj = document.getElementById('selected_project_list').getElementsByTagName('option');
        document.getElementById('selectedProj').value = selectedProj [document.getElementById('selected_project_list').selectedIndex].text;

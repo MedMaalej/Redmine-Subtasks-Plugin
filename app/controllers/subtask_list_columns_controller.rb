@@ -7,18 +7,15 @@ class SubtaskListColumnsController < ApplicationController
   helper_method :enablePluginTab  
   # before_filter :index 
  # before_filter :require_admin 
-  
+   
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
        puts "Project="+ proj
        #puts "OK
        SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
-       if ((params['inProject'].eql? '0') || ( params['fromLink'].eql? '1'))
+     
           redirect_to :back
-       elsif (params['inProject'].eql? '1') 
-          redirect_to "../subtask_list_columns?inProject=1&selectedProj=<%= proj %>" 
-       end
     end
   end
     def enablePluginTab
@@ -35,21 +32,23 @@ class SubtaskListColumnsController < ApplicationController
           c.subtasksTabIsEnabled = 1
           c.save
           @tabIsEnabled = true
-     elsif params['enablePluginTab'].eql? '0'
+     else 
           
           ProjectSettingsTab.where(userId: User.current.id).destroy_all              
           @tabIsEnabled = false
-     else
+    
      end
 
   end
   def index   
+     restoreDefaults()  
     if (params['inProject'].eql? '1')
        @inProj = true     
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
        @canRestore = User.current.allowed_to?(:restore_default_configuration, Project.find_by(name: proj))
        #puts @canRestore
        @canEnableDisable = User.current.allowed_to?(:enable_and_disable_plugin_tab,Project.find_by(name: proj))
+       
        @projects ||= Project.where(name: proj).pluck("name")
        #puts @canEnableDisable
        selectedProject = Project.find_by(name: proj)
@@ -83,7 +82,7 @@ class SubtaskListColumnsController < ApplicationController
 
    # sql = "SELECT userConfig  FROM subtasks_config_list where projectId=1" 
    # @allColumns ||= ActiveRecord::Base.connection.select_all(sql) 
-    restoreDefaults()
+    
     
     save = params['save'].blank? ? '' : params['save']
     
