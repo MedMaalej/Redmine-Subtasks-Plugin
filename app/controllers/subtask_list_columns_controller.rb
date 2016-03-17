@@ -7,11 +7,10 @@ class SubtaskListColumnsController < ApplicationController
   helper_method :enablePluginTab  
   # before_filter :index 
  # before_filter :require_admin 
-   
+  
   def restoreDefaults()
     if (params['restoreRequest'].eql? '1')
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
-       puts "Project="+ proj
        #puts "OK
        SubtasksConfigList.where(userId: User.current.id).where(projectId: Project.find_by(name: proj)).destroy_all
      
@@ -40,8 +39,10 @@ class SubtaskListColumnsController < ApplicationController
      end
 
   end
-  def index   
-     restoreDefaults()  
+  def index
+  
+   
+    restoreDefaults()  
     if (params['inProject'].eql? '1')
        @inProj = true     
        proj  = params['selectedProj'].blank? ? '' : params['selectedProj']
