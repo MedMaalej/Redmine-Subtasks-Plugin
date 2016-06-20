@@ -47,10 +47,10 @@
      @allLogs.each do |log|  %>
      <% if log['spent_on'] == @time_entry.spent_on %>
         <tr>
-           <td> <%= log['hours'] %> </td>
-           <td> <%= Issue.find_by(id: log['issue_id']) %> </td>
-           <td> <%= log['comments'] %> </td>  
-           <td> <%= Enumeration.find_by(id: log['activity_id']) %> </td> 
+           <td bgcolor="#81DAF5"> <%= log['hours'] %> </td>
+           <td bgcolor="#81DAF5"> <%= Issue.find_by(id: log['issue_id']) %> </td>
+           <td bgcolor="#81DAF5"> <%= log['comments'] %> </td>  
+           <td bgcolor="#81DAF5"> <%= Enumeration.find_by(id: log['activity_id']) %> </td> 
         </tr>
        <% sumOfHours = sumOfHours + log['hours'] %> 
      <%end%>  

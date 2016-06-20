@@ -68,7 +68,7 @@ class SubtaskListColumnsController < ApplicationController
          @tabIsEnabled = true
      end
 
-    enablePluginTab()       
+   #enablePluginTab()       
    
     @currentUser = User.current.id    
     sql = "SELECT  name FROM custom_fields WHERE type = 'IssueCustomField'"
