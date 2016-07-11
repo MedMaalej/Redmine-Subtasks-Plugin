@@ -92,14 +92,21 @@ class SubtaskListColumnsController < ApplicationController
        #SubtasksConfigList.delete_all
        user = User.current.id 
        if (proj == "Global configuration")
-          c = SubtasksConfigList.find_by(userId: User.current.id, projectId: Project.find_by(name: proj))
-          if c == nil
+          c = SubtasksConfigList.find_by(userId: 0, projectId: 0)
+          if c.nil? 
              c = SubtasksConfigList.new
+             c.projectId = 0
+             c.userId = 0
+             c.userConfig = config
+             c.save
+          else
+             c.update("userConfig": config)
           end 
-          c.projectId = 0
-          c.userId = 0
-          c.userConfig = config
-          c.save
+       
+         
+          
+
+             
          # redirect_to :subtask_list_columns
        else
           c = SubtasksConfigList.find_by(userId: User.current.id, projectId: Project.find_by(name: proj))
